@@ -29,8 +29,10 @@ def now_bkk():
     return datetime.now(BKK).strftime("%Y-%m-%d %H:%M:%S")
 
 
-def get_secret(name):
-    return st.secrets[name]
+def get_secret(name, default=None):
+    if name in st.secrets:
+        return st.secrets[name]
+    return default
 
 
 def github_headers():
