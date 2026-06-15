@@ -79,11 +79,18 @@ def save_csv_to_github(df, sha=None):
         "content": encoded,
         "branch": get_secret("GITHUB_BRANCH", "main")
     }
+
     if sha:
         payload["sha"] = sha
 
     r = requests.put(github_url(), headers=github_headers(), json=payload)
-    r.raise_for_status()
+
+    if not r.ok:
+        st.error(f"GitHub save failed: {r.status_code}")
+        st.code(r.text)
+        st.stop()
+
+    return r.json()
 
 
 def safe_json_loads(text, default):
